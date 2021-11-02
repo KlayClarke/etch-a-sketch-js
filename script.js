@@ -1,27 +1,43 @@
-const container = document.getElementById("container");
+const grid = document.getElementById("container");
+const reset = document.getElementById("reset");
 
-const rows = document.getElementsByClassName("gridRow");
-const cells = document.getElementsByClassName("cell");
+function createDivs(cols, rows) {
+  for (let i = 0; i < cols * rows; i++) {
+    const div = document.createElement("div");
 
-function makeGrid() {
-  makeRows(16);
-  makeCols(16);
-}
-
-function makeRows(rowNum) {
-  for (i = 0; i < rowNum; i++) {
-    let row = document.createElement("div");
-    container.appendChild(row).className = "gridRow";
+    grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    grid.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+    grid.appendChild(div).classList.add("box");
   }
 }
 
-function makeCols(colNum) {
-  for (i = 0; i < rows.length; i++) {
-    for (j = 0; j < colNum; j++) {
-      let col = document.createElement("div");
-      rows[j].appendChild(col).className = "cell";
-    }
+function updateGrid() {
+  grid.innerHTML = "";
+  let rows = Math.min(Math.max(parseInt(prompt("rows", "100")), 1), 50);
+  let cols = Math.min(Math.max(parseInt(prompt("columns?", "100")), 1), 50);
+  grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  grid.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+  for (let i = 0; i < cols * rows; i++) {
+    const div = document.createElement("div");
+    grid.appendChild(div).classList.add("box");
   }
+
+  paint();
 }
 
-makeGrid();
+function paint() {
+  const boxes = document.querySelectorAll(".box");
+  boxes.forEach((box) =>
+    box.addEventListener("mouseover", () => {
+      let rnum = Math.floor(Math.random() * 255);
+      box.style.background = `#${rnum}`;
+    })
+  );
+}
+
+reset.addEventListener("click", function () {
+  updateGrid();
+});
+
+createDivs(16, 16);
+paint();
